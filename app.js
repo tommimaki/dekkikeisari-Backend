@@ -20,6 +20,32 @@ db.query("SELECT 1 + 1 AS solution", (err, results) => {
   }
 });
 
+// db.query(
+//   `CREATE TABLE users (
+//       id INT PRIMARY KEY AUTO_INCREMENT,
+//       name VARCHAR(255),
+//       email VARCHAR(255)
+//     )`,
+//   (err, results) => {
+//     if (err) {
+//       console.error("Error creating table:", err.stack);
+//     } else {
+//       console.log("Table created successfully");
+//     }
+//   }
+// );
+
+// db.query(
+//   "INSERT INTO users (name, email) VALUES ('John Doe', 'johndoe@example.com')",
+//   (err, results) => {
+//     if (err) {
+//       console.error("Error inserting user:", err.stack);
+//     } else {
+//       console.log("User inserted successfully");
+//     }
+//   }
+// );
+
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");
 });
