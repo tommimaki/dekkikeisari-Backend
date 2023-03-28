@@ -10,6 +10,8 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
+// TODO//: Add logs
+
 // connection.connect((err) => {
 //   if (err) {
 //     console.error("Error connecting to the MySQL server:", err.stack);
