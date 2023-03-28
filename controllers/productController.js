@@ -19,6 +19,19 @@ const addProduct = async (req, res) => {
   }
 };
 
+const getAllProducts = async (req, res) => {
+  try {
+    const { category } = req.query;
+    const products = await Product.find(category);
+    logger.info("Products fetched correctly");
+    res.status(200).json({ products });
+  } catch (error) {
+    logger.error(`Error getting products: ${error}`);
+    res.status(500).json({ message: "Failed to get products" });
+  }
+};
+
 module.exports = {
   addProduct,
+  getAllProducts,
 };

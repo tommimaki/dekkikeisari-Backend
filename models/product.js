@@ -16,6 +16,21 @@ class Product {
       image_url,
     ]);
   }
+
+  async find(category = null) {
+    let query = `
+      SELECT *
+      FROM products
+    `;
+
+    if (category) {
+      query += `WHERE category = '${category}'`;
+    }
+
+    const connection = await db;
+    const [rows, fields] = await connection.execute(query);
+    return rows;
+  }
 }
 
 module.exports = new Product();
