@@ -46,7 +46,7 @@ const products = [
     description: "A vibrant skateboard deck with a graphic print.",
     price: 54.99,
     category: "Skateboards",
-    image_url: "httpshttps://picsum.photos/200",
+    image_url: "https://picsum.photos/200",
     sizes: ["7.75", "8.0", "8.25", "8.5"],
   },
   {
@@ -65,8 +65,8 @@ const seedProducts = async () => {
 
   for (const product of products) {
     const query = `
-        INSERT INTO products (name, description, price, category, image_url)
-        VALUES (?, ?, ?, ?, ?);
+        INSERT INTO products (name, description, price, category, image_url, sizes)
+        VALUES (?, ?, ?, ?, ?, ?);
       `;
 
     await connection.execute(query, [
@@ -75,6 +75,7 @@ const seedProducts = async () => {
       product.price,
       product.category,
       product.image_url,
+      product.sizes,
     ]);
   }
 };
