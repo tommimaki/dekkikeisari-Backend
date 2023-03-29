@@ -3,15 +3,22 @@ const logger = require("../utils/logger");
 
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price, category, image_url } = req.body;
+    const { name, description, price, category, image_url, sizes } = req.body;
 
-    if (!name || !description || !price || !category || !image_url) {
+    if (!name || !description || !price || !category || !image_url || !sizes) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    await Product.create({ name, description, price, category, image_url });
+    await Product.create({
+      name,
+      description,
+      price,
+      category,
+      image_url,
+      sizes,
+    });
 
-    logger.info("Product added succesfully");
+    logger.info("Product added successfully");
     res.status(201).json({ message: "Product added successfully" });
   } catch (error) {
     logger.error(`Error adding product: ${error}`);
@@ -31,7 +38,26 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      logger.error(`Product not found with id: ${id}`);
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    logger.info(`Product fetched successfully with id: ${id}`);
+    res.status(200).json({ product });
+  } catch (error) {
+    logger.error(`Error getting product by id: ${error}`);
+    res.status(500).json({ message: "Failed to get product" });
+  }
+};
+
 module.exports = {
   addProduct,
   getAllProducts,
+  getProductById,
 };
