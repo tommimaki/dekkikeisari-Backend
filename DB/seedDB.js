@@ -6,7 +6,7 @@ const products = [
     description: "A stylish shirt for everyday wear.",
     price: 29.99,
     category: "Shirts",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: ["S", "M", "L", "XL"],
   },
   {
@@ -14,7 +14,7 @@ const products = [
     description: "A comfortable shirt with a modern design.",
     price: 34.99,
     category: "Shirts",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: ["S", "M", "L", "XL"],
   },
   {
@@ -22,7 +22,7 @@ const products = [
     description: "A durable shoe with excellent grip.",
     price: 89.99,
     category: "Shoes",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: [6, 7, 8, 9, 10, 11],
   },
   {
@@ -30,7 +30,7 @@ const products = [
     description: "A comfortable shoe with a modern design.",
     price: 99.99,
     category: "Shoes",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: [6, 7, 8, 9, 10, 11],
   },
   {
@@ -38,7 +38,7 @@ const products = [
     description: "A classic skateboard deck with a minimalist design.",
     price: 49.99,
     category: "Skateboards",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: ["8.0", "8.25", "8.5"],
   },
   {
@@ -46,7 +46,7 @@ const products = [
     description: "A vibrant skateboard deck with a graphic print.",
     price: 54.99,
     category: "Skateboards",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: ["7.75", "8.0", "8.25", "8.5"],
   },
   {
@@ -54,10 +54,9 @@ const products = [
     description: "A durable skateboard deck with a unique shape.",
     price: 59.99,
     category: "Skateboards",
-    image_url: "https://picsum.photos/200",
+    image_url: "https://picsum.photos/400",
     sizes: ["8.0", "8.25", "8.5", "8.75"],
   },
-  // Add more product objects
 ];
 
 const seedProducts = async () => {
