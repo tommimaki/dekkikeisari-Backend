@@ -3,11 +3,13 @@ const logger = require("../utils/logger");
 
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price, category, image_url, sizes } = req.body;
+    const { name, description, price, category, sizes } = req.body;
 
-    if (!name || !description || !price || !category || !image_url || !sizes) {
+    if (!name || !description || !price || !category || !sizes || !req.file) {
       return res.status(400).json({ message: "All fields are required" });
     }
+
+    const image_url = req.file.path; // Use the file path as the image_url
 
     await Product.create({
       name,
