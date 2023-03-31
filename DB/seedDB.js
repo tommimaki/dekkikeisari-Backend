@@ -1,4 +1,4 @@
-const db = require("./db");
+const { pool } = require("./db");
 
 const products = [
   {
@@ -60,15 +60,13 @@ const products = [
 ];
 
 const seedProducts = async () => {
-  const connection = await db;
-
   for (const product of products) {
     const query = `
         INSERT INTO products (name, description, price, category, image_url, sizes)
         VALUES (?, ?, ?, ?, ?, ?);
       `;
 
-    await connection.execute(query, [
+    await pool.execute(query, [
       product.name,
       product.description,
       product.price,

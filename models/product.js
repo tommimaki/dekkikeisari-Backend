@@ -1,4 +1,5 @@
 const db = require("../DB/db");
+const { pool } = require("../DB/db");
 
 class Product {
   async create({ name, description, price, category, image_url, sizes }) {
@@ -8,7 +9,7 @@ class Product {
     `;
 
     const connection = await db;
-    await connection.execute(query, [
+    await pool.query(query, [
       name,
       description,
       price,
@@ -29,7 +30,7 @@ class Product {
     }
 
     const connection = await db;
-    const [rows, fields] = await connection.execute(query);
+    const [rows, fields] = await pool.query(query);
     return rows;
   }
 
@@ -41,7 +42,7 @@ class Product {
     `;
 
     const connection = await db;
-    const [rows, fields] = await connection.execute(query, [id]);
+    const [rows, fields] = await pool.query(query, [id]);
     return rows[0]; // return the first result, or null if not found
   }
 }

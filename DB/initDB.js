@@ -1,4 +1,5 @@
 const db = require("./db");
+const { pool } = require("./db");
 
 // run node initDB.js to initialise the database
 
@@ -49,8 +50,7 @@ const createProductsTable = async () => {
     );
   `;
 
-  const connection = await db;
-  await connection.query(query);
+  await pool.query(query);
 };
 
 const createOrderItemsTable = async () => {
