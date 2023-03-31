@@ -2,13 +2,23 @@ require("dotenv").config();
 
 const mysql = require("mysql2/promise");
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
+// const connection = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   port: process.env.DB_PORT,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+// });
+
+const pool = mysql.createPool({
+  host: process.env.AWS_HOST,
+  user: process.env.AWS_USER,
+  password: process.env.AWS_PASS,
+  database: process.env.AWS_DB,
   port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
 });
+
+module.exports = pool;
 
 // TODO//: Add logs
 
@@ -21,4 +31,4 @@ const connection = mysql.createConnection({
 //   console.log("Connected to the MySQL server as ID", connection.threadId);
 // });
 
-module.exports = connection;
+// module.exports = connection;
