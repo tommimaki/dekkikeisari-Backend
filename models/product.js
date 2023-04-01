@@ -1,4 +1,3 @@
-const db = require("../DB/db");
 const { pool } = require("../DB/db");
 
 class Product {
@@ -8,7 +7,6 @@ class Product {
       VALUES (?, ?, ?, ?, ?, ?);
     `;
 
-    const connection = await db;
     await pool.query(query, [
       name,
       description,
@@ -29,7 +27,6 @@ class Product {
       query += `WHERE category = '${category}'`;
     }
 
-    const connection = await db;
     const [rows, fields] = await pool.query(query);
     return rows;
   }
@@ -41,7 +38,6 @@ class Product {
       WHERE id = ?
     `;
 
-    const connection = await db;
     const [rows, fields] = await pool.query(query, [id]);
     return rows[0]; // return the first result, or null if not found
   }

@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const db = require("./DB/db");
 const productRoute = require("./routes/productRoutes");
 const { pool } = require("./DB/db");
 
