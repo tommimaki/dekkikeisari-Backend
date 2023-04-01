@@ -9,7 +9,7 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const image_url = req.file.path; // Use the file path as the image_url
+    const image_url = req.file.location; // Use the file path as the image_url
 
     await Product.create({
       name,
