@@ -1,5 +1,19 @@
 const Product = require("../models/product");
 const logger = require("../utils/logger");
+const AWS = require("aws-sdk");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const crypto = require("crypto");
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+  region: process.env.AWS_REGION,
+});
+
+const generateFileName = (bytes = 32) =>
+  crypto.randomBytes(bytes).toString("hex");
 
 const addProduct = async (req, res) => {
   try {
@@ -9,7 +23,19 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const image_url = req.file.location; // Use the file path as the image_url
+    const fileName = `products/${Date.now()}-${generateFileName()}-${
+      req.file.originalname
+    }`;
+    const uploadParams = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Body: req.file.buffer,
+      Key: fileName,
+      ContentType: req.file.mimetype,
+      // ACL: "public-read",
+    };
+
+    await s3.send(new PutObjectCommand(uploadParams));
+    const image_url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
 
     await Product.create({
       name,
