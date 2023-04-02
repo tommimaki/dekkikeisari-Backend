@@ -37,6 +37,16 @@ const createOrdersTable = async () => {
   await connection.query(query);
 };
 
+// CREATE TABLE orders (
+//   id INT AUTO_INCREMENT PRIMARY KEY,
+//   customer_id INT,
+//   products TEXT NOT NULL,
+//   total DECIMAL(10, 2) NOT NULL,
+//   shipping_address TEXT NOT NULL,
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+// );
+
 const createProductsTable = async () => {
   const query = `
     CREATE TABLE products (

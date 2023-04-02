@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const productRoute = require("./routes/productRoutes");
+const orderRoute = require("./routes/orderRoutes");
 const { pool } = require("./DB/db");
 
 dotenv.config();
@@ -26,5 +27,6 @@ app.get("/testdb", async (req, res) => {
 });
 // Pass the upload instance to the productRoute
 app.use("/products", productRoute);
+app.use("/orders", orderRoute);
 
 module.exports = app;
