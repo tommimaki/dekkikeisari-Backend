@@ -1,7 +1,11 @@
 const Product = require("../models/product");
 const logger = require("../utils/logger");
 const AWS = require("aws-sdk");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const crypto = require("crypto");
 
 const s3 = new S3Client({
@@ -85,9 +89,50 @@ const getProductById = async (req, res) => {
     res.status(500).json({ message: "Failed to get product" });
   }
 };
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      logger.error(`Product not found with id: ${id}`);
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Check if the image URL is from your S3 bucket
+    if (
+      product.image_url.includes(
+        `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
+      )
+    ) {
+      const imageKey = product.image_url.split(
+        `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
+      )[1];
+
+      if (imageKey) {
+        const deleteParams = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: imageKey,
+        };
+
+        await s3.send(new DeleteObjectCommand(deleteParams));
+      }
+    }
+
+    // Remove the product from the database
+    await Product.delete(id);
+
+    logger.info(`Product deleted successfully with id: ${id}`);
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    logger.error(`Error deleting product: ${error}`);
+    res.status(500).json({ message: "Failed to delete product" });
+  }
+};
 
 module.exports = {
   addProduct,
   getAllProducts,
   getProductById,
+  deleteProduct,
 };

@@ -41,6 +41,14 @@ class Product {
     const [rows, fields] = await pool.query(query, [id]);
     return rows[0]; // return the first result, or null if not found
   }
+  async delete(id) {
+    const query = `
+      DELETE FROM products
+      WHERE id = ?
+    `;
+
+    await pool.query(query, [id]);
+  }
 }
 
 module.exports = new Product();
