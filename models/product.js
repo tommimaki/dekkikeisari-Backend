@@ -49,6 +49,24 @@ class Product {
 
     await pool.query(query, [id]);
   }
+
+  async update(id, { name, description, price, category, image_url, sizes }) {
+    const query = `
+      UPDATE products
+      SET name = ?, description = ?, price = ?, category = ?, image_url = ?, sizes = ?
+      WHERE id = ?;
+    `;
+
+    await pool.query(query, [
+      name,
+      description,
+      price,
+      category,
+      image_url,
+      sizes,
+      id,
+    ]);
+  }
 }
 
 module.exports = new Product();
