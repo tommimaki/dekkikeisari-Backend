@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const productRoute = require("./routes/productRoutes");
 const orderRoute = require("./routes/orderRoutes");
 const { pool } = require("./DB/db");
+const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
 
@@ -28,5 +29,6 @@ app.get("/testdb", async (req, res) => {
 // Pass the upload instance to the productRoute
 app.use("/products", productRoute);
 app.use("/orders", orderRoute);
+app.use("/users", userRoutes);
 
 module.exports = app;
