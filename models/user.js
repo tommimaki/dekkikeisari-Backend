@@ -1,15 +1,14 @@
 const { pool } = require("../DB/db");
 
 class User {
-  async create({ email, password, role }) {
+  async create({ name, email, password, address, role }) {
     const query = `
-      INSERT INTO users (email, password, role)
-      VALUES (?, ?, ?);
-    `;
+          INSERT INTO users (name, email, password, address, role)
+          VALUES (?, ?, ?, ?, ?);
+        `;
 
-    await pool.query(query, [email, password, role]);
+    await pool.query(query, [name, email, password, address, role]);
   }
-
   async findByEmail(email) {
     const query = `
       SELECT *

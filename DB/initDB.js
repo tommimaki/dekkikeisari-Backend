@@ -11,14 +11,11 @@ const createUsersTable = async () => {
         email VARCHAR(255) UNIQUE,
         password VARCHAR(255),
         address VARCHAR(255),
-        city VARCHAR(255),
-        state VARCHAR(255),
-        zip_code VARCHAR(10)
+        role VARCHAR(255) NOT NULL DEFAULT 'user'
       );
     `;
 
-  const connection = await db;
-  await connection.query(query);
+  await pool.query(query);
 };
 
 const createOrdersTable = async () => {
@@ -100,17 +97,17 @@ const initDB = async () => {
   try {
     const connection = await db;
 
-    // console.log("Creating users table...");
-    // await createUsersTable();
-    // console.log("Users table created.");
+    console.log("Creating users table...");
+    await createUsersTable();
+    console.log("Users table created.");
 
     // console.log("Creating orders table...");
     // await createOrdersTable();
     // console.log("Orders table created.");
 
-    console.log("Creating products table...");
-    await createProductsTable();
-    console.log("Products table created.");
+    // console.log("Creating products table...");
+    // await createProductsTable();
+    // console.log("Products table created.");
 
     // console.log("Creating order items table...");
     // await createOrderItemsTable();
