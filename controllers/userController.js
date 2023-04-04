@@ -7,10 +7,10 @@ const createUser = async (req, res) => {
   try {
     const { name, email, password, address, role } = req.body;
 
-    console.log(req.body);
-
-    if (!name || !email || !password || !address || !role) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const existingUser = await User.findByEmail(email);
@@ -22,11 +22,11 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = {
-      name: name,
+      name: name || "",
       email: email,
       password: hashedPassword,
-      address: address,
-      role: role,
+      address: address || "",
+      role: role || "customer",
     };
 
     await User.create(newUser);
