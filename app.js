@@ -5,7 +5,7 @@ const productRoute = require("./routes/productRoutes");
 const orderRoute = require("./routes/orderRoutes");
 const { pool } = require("./DB/db");
 const userRoutes = require("./routes/userRoutes");
-
+const authRoutes = require("./routes/authRoutes");
 dotenv.config();
 
 const app = express();
@@ -30,5 +30,6 @@ app.get("/testdb", async (req, res) => {
 app.use("/products", productRoute);
 app.use("/orders", orderRoute);
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 module.exports = app;
