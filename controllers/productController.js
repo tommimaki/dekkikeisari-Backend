@@ -23,30 +23,34 @@ const addProduct = async (req, res) => {
   try {
     const { name, description, price, category, sizes } = req.body;
 
-    if (!name || !description || !price || !category || !sizes || !req.file) {
+    if (!name || !description || !price || !category || !sizes || !req.files) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const fileName = `products/${Date.now()}-${generateFileName()}-${
-      req.file.originalname
-    }`;
-    const uploadParams = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Body: req.file.buffer,
-      Key: fileName,
-      ContentType: req.file.mimetype,
-      // ACL: "public-read",
-    };
+    const imageUrls = [];
 
-    await s3.send(new PutObjectCommand(uploadParams));
-    const image_url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+    for (const file of req.files) {
+      const fileName = `products/${Date.now()}-${generateFileName()}-${
+        file.originalname
+      }`;
+      const uploadParams = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Body: file.buffer,
+        Key: fileName,
+        ContentType: file.mimetype,
+      };
+
+      await s3.send(new PutObjectCommand(uploadParams));
+      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+      imageUrls.push(imageUrl);
+    }
 
     await Product.create({
       name,
       description,
       price,
       category,
-      image_url,
+      image_urls: JSON.stringify(imageUrls),
       sizes,
     });
 
@@ -57,6 +61,45 @@ const addProduct = async (req, res) => {
     res.status(500).json({ message: "Failed to add product" });
   }
 };
+
+// const addProduct = async (req, res) => {
+//   try {
+//     const { name, description, price, category, sizes } = req.body;
+
+//     if (!name || !description || !price || !category || !sizes || !req.file) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
+
+//     const fileName = `products/${Date.now()}-${generateFileName()}-${
+//       req.file.originalname
+//     }`;
+//     const uploadParams = {
+//       Bucket: process.env.AWS_S3_BUCKET_NAME,
+//       Body: req.file.buffer,
+//       Key: fileName,
+//       ContentType: req.file.mimetype,
+//       // ACL: "public-read",
+//     };
+
+//     await s3.send(new PutObjectCommand(uploadParams));
+//     const image_url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+//     await Product.create({
+//       name,
+//       description,
+//       price,
+//       category,
+//       image_url,
+//       sizes,
+//     });
+
+//     logger.info("Product added successfully");
+//     res.status(201).json({ message: "Product added successfully" });
+//   } catch (error) {
+//     logger.error(`Error adding product: ${error}`);
+//     res.status(500).json({ message: "Failed to add product" });
+//   }
+// };
 
 const getAllProducts = async (req, res) => {
   try {

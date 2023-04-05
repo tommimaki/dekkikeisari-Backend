@@ -1,9 +1,9 @@
 const { pool } = require("../DB/db");
 
 class Product {
-  async create({ name, description, price, category, image_url, sizes }) {
+  async create({ name, description, price, category, image_urls, sizes }) {
     const query = `
-      INSERT INTO products (name, description, price, category, image_url, sizes)
+      INSERT INTO products (name, description, price, category, image_urls, sizes)
       VALUES (?, ?, ?, ?, ?, ?);
     `;
 
@@ -12,7 +12,7 @@ class Product {
       description,
       price,
       category,
-      image_url,
+      JSON.stringify(image_urls),
       sizes,
     ]);
   }
