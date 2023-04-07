@@ -57,6 +57,7 @@ const getUserData = async (req, res) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      address: user.address,
     };
 
     res.json(userData);

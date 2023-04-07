@@ -1,10 +1,17 @@
 const { pool } = require("../DB/db");
 
 class Order {
-  async create({ customerId, products, total, shippingAddress }) {
+  async create({
+    customerId,
+    products,
+    total,
+    shippingAddress,
+    customerName,
+    customerEmail,
+  }) {
     const query = `
-      INSERT INTO orders (customer_id, products, total, shipping_address)
-      VALUES (?, ?, ?, ?);
+      INSERT INTO orders (customer_id, products, total, shipping_address, customer_name, customer_email)
+      VALUES (?, ?, ?, ?, ?, ?);
     `;
 
     await pool.query(query, [
@@ -12,6 +19,8 @@ class Order {
       JSON.stringify(products),
       total,
       JSON.stringify(shippingAddress),
+      customerName,
+      customerEmail,
     ]);
   }
 

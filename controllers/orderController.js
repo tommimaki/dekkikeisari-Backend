@@ -1,15 +1,43 @@
 const Order = require("../models/order");
 const logger = require("../utils/logger");
 
+// const createOrder = async (req, res) => {
+//   try {
+//     const { customerId, products, total, shippingAddress } = req.body;
+
+//     if (!customerId || !products || !total || !shippingAddress) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
+
+//     await Order.create({ customerId, products, total, shippingAddress });
+
+//     logger.info("Order created successfully");
+//     res.status(201).json({ message: "Order created successfully" });
+//   } catch (error) {
+//     console.error("Error creating order:", error);
+//     res
+//       .status(500)
+//       .json({ message: `Failed to create order: ${error.message}` });
+//   }
+// };
+
 const createOrder = async (req, res) => {
   try {
-    const { customerId, products, total, shippingAddress } = req.body;
+    const { customerId, products, total, shippingAddress, name, email } =
+      req.body;
 
     if (!customerId || !products || !total || !shippingAddress) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    await Order.create({ customerId, products, total, shippingAddress });
+    await Order.create({
+      customerId,
+      products,
+      total,
+      shippingAddress,
+      name,
+      email,
+    });
 
     logger.info("Order created successfully");
     res.status(201).json({ message: "Order created successfully" });
