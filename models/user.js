@@ -30,6 +30,17 @@ class User {
     const [rows, fields] = await pool.query(query, [id]);
     return rows[0]; // return the first result, or null if not found
   }
+
+  async update(id, updatedData) {
+    const { name, email, address } = updatedData;
+    const query = `
+      UPDATE users
+      SET name = ?, email = ?, address = ?
+      WHERE id = ?;
+    `;
+
+    await pool.query(query, [name, email, address, id]);
+  }
 }
 
 module.exports = new User();

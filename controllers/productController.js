@@ -62,45 +62,6 @@ const addProduct = async (req, res) => {
   }
 };
 
-// const addProduct = async (req, res) => {
-//   try {
-//     const { name, description, price, category, sizes } = req.body;
-
-//     if (!name || !description || !price || !category || !sizes || !req.file) {
-//       return res.status(400).json({ message: "All fields are required" });
-//     }
-
-//     const fileName = `products/${Date.now()}-${generateFileName()}-${
-//       req.file.originalname
-//     }`;
-//     const uploadParams = {
-//       Bucket: process.env.AWS_S3_BUCKET_NAME,
-//       Body: req.file.buffer,
-//       Key: fileName,
-//       ContentType: req.file.mimetype,
-//       // ACL: "public-read",
-//     };
-
-//     await s3.send(new PutObjectCommand(uploadParams));
-//     const image_url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
-
-//     await Product.create({
-//       name,
-//       description,
-//       price,
-//       category,
-//       image_url,
-//       sizes,
-//     });
-
-//     logger.info("Product added successfully");
-//     res.status(201).json({ message: "Product added successfully" });
-//   } catch (error) {
-//     logger.error(`Error adding product: ${error}`);
-//     res.status(500).json({ message: "Failed to add product" });
-//   }
-// };
-
 const getAllProducts = async (req, res) => {
   try {
     const { category } = req.query;
@@ -172,6 +133,8 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Failed to delete product" });
   }
 };
+
+///Todo edit for multiple photos
 
 const updateProduct = async (req, res) => {
   try {

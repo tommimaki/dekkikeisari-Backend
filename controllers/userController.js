@@ -39,6 +39,68 @@ const createUser = async (req, res) => {
   }
 };
 
+const getUserData = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    res.json(userData);
+  } catch (error) {
+    console.error(`Error fetching user data: ${error}`);
+    res.status(500).json({ message: "Error fetching user data" });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { name, email, address } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    const userData = await User.findById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Only update fields that are provided in the request body
+    const updatedData = {
+      ...(name ? { name } : {}),
+      ...(email ? { email } : {}),
+      ...(address ? { address } : {}),
+    };
+    await User.update(userId, updatedData);
+
+    const updatedUser = await User.findById(userId); // Fetch the updated user data
+
+    logger.info("User updated successfully", updatedUser.name);
+    res.status(200).json(updatedUser); // Send the updated user data in the response
+  } catch (error) {
+    logger.error(`Error updating user: ${error}`);
+    res.status(500).json({ message: "Failed to update user" });
+  }
+};
+
 module.exports = {
   createUser,
+  getUserData,
+  updateUser,
 };
