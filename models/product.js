@@ -50,10 +50,10 @@ class Product {
     await pool.query(query, [id]);
   }
 
-  async update(id, { name, description, price, category, image_url, sizes }) {
+  async update(id, { name, description, price, category, image_urls, sizes }) {
     const query = `
       UPDATE products
-      SET name = ?, description = ?, price = ?, category = ?, image_url = ?, sizes = ?
+      SET name = ?, description = ?, price = ?, category = ?, image_urls = ?, sizes = ?
       WHERE id = ?;
     `;
 
@@ -62,7 +62,7 @@ class Product {
       description,
       price,
       category,
-      image_url,
+      image_urls,
       sizes,
       id,
     ]);
