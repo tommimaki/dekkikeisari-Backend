@@ -50,6 +50,9 @@ const getProductById = async (req, res) => {
     res.status(500).json({ message: "Failed to get product" });
   }
 };
+
+//delete
+
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,23 +63,27 @@ const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Check if the image URL is from your S3 bucket
-    if (
-      product.image_url.includes(
-        `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
-      )
-    ) {
-      const imageKey = product.image_url.split(
-        `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
-      )[1];
+    // Check if the image URLs are from your S3 bucket
+    const imageUrls = product.image_urls || [];
 
-      if (imageKey) {
-        const deleteParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: imageKey,
-        };
+    for (const imageUrl of imageUrls) {
+      if (
+        imageUrl.includes(
+          `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
+        )
+      ) {
+        const imageKey = imageUrl.split(
+          `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
+        )[1];
 
-        await s3.send(new DeleteObjectCommand(deleteParams));
+        if (imageKey) {
+          const deleteParams = {
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Key: imageKey,
+          };
+
+          await s3.send(new DeleteObjectCommand(deleteParams));
+        }
       }
     }
 
@@ -91,6 +98,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+///ADD products
 const addProduct = async (req, res) => {
   try {
     const { name, description, price, category, sizes } = req.body;
