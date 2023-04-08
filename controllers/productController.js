@@ -133,6 +133,8 @@ const addProduct = async (req, res) => {
     res.status(500).json({ message: "Failed to add product" });
   }
 };
+
+//Update
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -143,28 +145,21 @@ const updateProduct = async (req, res) => {
     }
 
     const product = await Product.findById(id);
+    console.log("req files:", req.files);
 
-    console.log(product.image_urls);
     if (!product) {
       logger.error(`Product not found with id: ${id}`);
       return res.status(404).json({ message: "Product not found" });
     }
-    const isValidJson = (str) => {
-      try {
-        JSON.parse(str);
-      } catch (e) {
-        return false;
-      }
-      return true;
-    };
 
-    let imageUrls = isValidJson(product.image_urls)
-      ? JSON.parse(product.image_urls)
-      : product.image_urls;
+    let imageUrls = product.image_urls;
+    console.log("Initial imageUrls:", imageUrls);
 
-    if (req.files) {
+    if (Array.isArray(req.files) && req.files.length > 0) {
+      // Delete old images from S3 bucket
       // Delete old images from S3 bucket
       if (Array.isArray(imageUrls)) {
+        console.log("Deleting old images from S3 bucket...");
         for (const oldImageUrl of imageUrls) {
           if (
             oldImageUrl.includes(
@@ -182,13 +177,14 @@ const updateProduct = async (req, res) => {
               };
 
               await s3.send(new DeleteObjectCommand(deleteParams));
+              console.log(`Deleted image with key '${imageKey}'`);
             }
           }
         }
       }
 
       // Upload new images to S3 bucket
-      imageUrls = [];
+      const newImageUrls = [];
       for (const file of req.files) {
         const fileName = `products/${Date.now()}-${generateFileName()}-${
           file.originalname
@@ -201,26 +197,56 @@ const updateProduct = async (req, res) => {
         };
 
         await s3.send(new PutObjectCommand(uploadParams));
+        console.log(`Uploaded file with name '${fileName}'`);
+
         const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
-        imageUrls.push(imageUrl);
+        newImageUrls.push(imageUrl);
       }
+      imageUrls = newImageUrls;
+      console.log("Updated imageUrls:", imageUrls);
     }
 
-    console.log("pure", imageUrls);
-    console.log("stringified", JSON.stringify(imageUrls));
-
+    //for new
     const stringifyWithEscapedQuotes = (arr) => {
       return JSON.stringify(JSON.stringify(arr));
     };
 
-    await Product.update(id, {
+    //for old pictures
+    const convertArrayToStringWithEscapedQuotes = (input) => {
+      if (Array.isArray(input)) {
+        return JSON.stringify(input);
+      } else if (typeof input === "string") {
+        const desiredFormatRegex = /^\["(.*)"\]$/;
+        if (input.match(desiredFormatRegex)) {
+          return input;
+        } else {
+          console.error("Invalid input format");
+        }
+      } else if (typeof input === "object") {
+        return JSON.stringify(Object.values(input));
+      } else {
+        console.error("Invalid input type");
+      }
+    };
+
+    console.log(
+      "product.image_urls stringify ",
+      typeof product.image_urls,
+      convertArrayToStringWithEscapedQuotes(product.image_urls)
+    );
+
+    const updateData = {
       name,
       description,
       price,
       category,
-      image_urls: stringifyWithEscapedQuotes(imageUrls),
       sizes,
-    });
+      image_urls:
+        Array.isArray(req.files) && req.files.length > 0
+          ? stringifyWithEscapedQuotes(imageUrls)
+          : convertArrayToStringWithEscapedQuotes(product.image_urls),
+    };
+    await Product.update(id, updateData);
     logger.info(`Product updated successfully with id: ${id}`);
     res.status(200).json({ message: "Product updated successfully" });
   } catch (error) {
