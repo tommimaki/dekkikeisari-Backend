@@ -19,49 +19,6 @@ const s3 = new S3Client({
 const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
 
-const addProduct = async (req, res) => {
-  try {
-    const { name, description, price, category, sizes } = req.body;
-
-    if (!name || !description || !price || !category || !sizes || !req.files) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const imageUrls = [];
-
-    for (const file of req.files) {
-      const fileName = `products/${Date.now()}-${generateFileName()}-${
-        file.originalname
-      }`;
-      const uploadParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Body: file.buffer,
-        Key: fileName,
-        ContentType: file.mimetype,
-      };
-
-      await s3.send(new PutObjectCommand(uploadParams));
-      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
-      imageUrls.push(imageUrl);
-    }
-
-    await Product.create({
-      name,
-      description,
-      price,
-      category,
-      image_urls: JSON.stringify(imageUrls),
-      sizes,
-    });
-
-    logger.info("Product added successfully");
-    res.status(201).json({ message: "Product added successfully" });
-  } catch (error) {
-    logger.error(`Error adding product: ${error}`);
-    res.status(500).json({ message: "Failed to add product" });
-  }
-};
-
 const getAllProducts = async (req, res) => {
   try {
     const { category } = req.query;
@@ -134,79 +91,48 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-///Todo edit for multiple photos
+const addProduct = async (req, res) => {
+  try {
+    const { name, description, price, category, sizes } = req.body;
 
-// const updateProduct = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, description, price, category, sizes } = req.body;
+    if (!name || !description || !price || !category || !sizes || !req.files) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-//     if (!name || !description || !price || !category || !sizes) {
-//       return res.status(400).json({ message: "All fields are required" });
-//     }
+    const imageUrls = [];
 
-//     const product = await Product.findById(id);
+    for (const file of req.files) {
+      const fileName = `products/${Date.now()}-${generateFileName()}-${
+        file.originalname
+      }`;
+      const uploadParams = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Body: file.buffer,
+        Key: fileName,
+        ContentType: file.mimetype,
+      };
 
-//     if (!product) {
-//       logger.error(`Product not found with id: ${id}`);
-//       return res.status(404).json({ message: "Product not found" });
-//     }
+      await s3.send(new PutObjectCommand(uploadParams));
+      const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+      imageUrls.push(imageUrl);
+    }
 
-//     let image_urls = product.image_urls;
+    await Product.create({
+      name,
+      description,
+      price,
+      category,
+      image_urls: JSON.stringify(imageUrls),
+      sizes,
+    });
 
-//     if (req.file) {
-//       // Delete old image from S3 bucket
-//       if (
-//         product.image_urls.includes(
-//           `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
-//         )
-//       ) {
-//         const imageKey = product.image_urls.split(
-//           `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
-//         )[1];
-
-//         if (imageKey) {
-//           const deleteParams = {
-//             Bucket: process.env.AWS_S3_BUCKET_NAME,
-//             Key: imageKey,
-//           };
-
-//           await s3.send(new DeleteObjectCommand(deleteParams));
-//         }
-//       }
-
-//       // Upload new image to S3 bucket
-//       const fileName = `products/${Date.now()}-${generateFileName()}-${
-//         req.file.originalname
-//       }`;
-//       const uploadParams = {
-//         Bucket: process.env.AWS_S3_BUCKET_NAME,
-//         Body: req.file.buffer,
-//         Key: fileName,
-//         ContentType: req.file.mimetype,
-//         // ACL: "public-read",
-//       };
-
-//       await s3.send(new PutObjectCommand(uploadParams));
-//       image_url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
-//     }
-
-//     await Product.update(id, {
-//       name,
-//       description,
-//       price,
-//       category,
-//       image_url,
-//       sizes,
-//     });
-
-//     logger.info(`Product updated successfully with id: ${id}`);
-//     res.status(200).json({ message: "Product updated successfully" });
-//   } catch (error) {
-//     logger.error(`Error updating product: ${error}`);
-//     res.status(500).json({ message: "Failed to update product" });
-//   }
-// };
+    logger.info("Product added successfully");
+    res.status(201).json({ message: "Product added successfully" });
+  } catch (error) {
+    logger.error(`Error adding product: ${error}`);
+    res.status(500).json({ message: "Failed to add product" });
+  }
+};
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -218,32 +144,45 @@ const updateProduct = async (req, res) => {
 
     const product = await Product.findById(id);
 
+    console.log(product.image_urls);
     if (!product) {
       logger.error(`Product not found with id: ${id}`);
       return res.status(404).json({ message: "Product not found" });
     }
+    const isValidJson = (str) => {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    };
 
-    let imageUrls = JSON.parse(product.image_urls);
+    let imageUrls = isValidJson(product.image_urls)
+      ? JSON.parse(product.image_urls)
+      : product.image_urls;
 
     if (req.files) {
       // Delete old images from S3 bucket
-      for (const oldImageUrl of imageUrls) {
-        if (
-          oldImageUrl.includes(
-            `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
-          )
-        ) {
-          const imageKey = oldImageUrl.split(
-            `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
-          )[1];
+      if (Array.isArray(imageUrls)) {
+        for (const oldImageUrl of imageUrls) {
+          if (
+            oldImageUrl.includes(
+              `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`
+            )
+          ) {
+            const imageKey = oldImageUrl.split(
+              `${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`
+            )[1];
 
-          if (imageKey) {
-            const deleteParams = {
-              Bucket: process.env.AWS_S3_BUCKET_NAME,
-              Key: imageKey,
-            };
+            if (imageKey) {
+              const deleteParams = {
+                Bucket: process.env.AWS_S3_BUCKET_NAME,
+                Key: imageKey,
+              };
 
-            await s3.send(new DeleteObjectCommand(deleteParams));
+              await s3.send(new DeleteObjectCommand(deleteParams));
+            }
           }
         }
       }
@@ -267,15 +206,21 @@ const updateProduct = async (req, res) => {
       }
     }
 
+    console.log("pure", imageUrls);
+    console.log("stringified", JSON.stringify(imageUrls));
+
+    const stringifyWithEscapedQuotes = (arr) => {
+      return JSON.stringify(JSON.stringify(arr));
+    };
+
     await Product.update(id, {
       name,
       description,
       price,
       category,
-      image_urls: JSON.stringify(imageUrls),
+      image_urls: stringifyWithEscapedQuotes(imageUrls),
       sizes,
     });
-
     logger.info(`Product updated successfully with id: ${id}`);
     res.status(200).json({ message: "Product updated successfully" });
   } catch (error) {
