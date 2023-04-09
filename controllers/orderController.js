@@ -64,14 +64,16 @@ const updateOrder = async (req, res) => {
     const data = req.body;
 
     await Order.updateById(id, data);
+    const updatedOrder = await Order.findById(id); // Fetch the updated order
     logger.info(`Order updated successfully with id: ${id}`);
-    res.status(200).json({ message: "Order updated successfully" });
+    res
+      .status(200)
+      .json({ message: "Order updated successfully", order: updatedOrder }); // Send the updated order in the response
   } catch (error) {
     logger.error(`Error updating order: ${error}`);
     res.status(500).json({ message: "Failed to update order" });
   }
 };
-
 const deleteOrder = async (req, res) => {
   try {
     const { id } = req.params;

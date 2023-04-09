@@ -12,7 +12,7 @@ const {
 router.post("/", createOrder);
 router.get("/", getAllOrders);
 router.get("/:id", getOrderById);
-router.put("/orders/:id", updateOrder);
-router.delete("/orders/:id", deleteOrder);
+router.put("/:id", updateOrder);
+router.delete("/:id", deleteOrder);
 
 module.exports = router;
