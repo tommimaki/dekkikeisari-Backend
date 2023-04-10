@@ -87,10 +87,23 @@ const deleteOrder = async (req, res) => {
   }
 };
 
+const getOrdersByCustomerId = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const orders = await Order.findByCustomerId(customerId);
+    logger.info(`Orders fetched correctly for customer with ID: ${customerId}`);
+    res.status(200).json({ orders });
+  } catch (error) {
+    logger.error(`Error getting orders by customer ID: ${error}`);
+    res.status(500).json({ message: "Failed to get orders" });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrders,
   getOrderById,
   updateOrder,
   deleteOrder,
+  getOrdersByCustomerId,
 };

@@ -70,6 +70,17 @@ class Order {
 
     await pool.query(query, [id]);
   }
+
+  async findByCustomerId(customerId) {
+    const query = `
+    SELECT *
+    FROM orders
+    WHERE customer_id = ?
+  `;
+
+    const [rows, fields] = await pool.query(query, [customerId]);
+    return rows;
+  }
 }
 
 module.exports = new Order();
