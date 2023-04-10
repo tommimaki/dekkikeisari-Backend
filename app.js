@@ -32,4 +32,8 @@ app.use("/orders", orderRoute);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 
+app.get("/test", (req, res) => {
+  res.send("Test route is working");
+});
+
 module.exports = app;

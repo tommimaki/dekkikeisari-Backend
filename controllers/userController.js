@@ -101,8 +101,21 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  console.log("Inside getAllUsers function"); // Add this line
+  try {
+    const users = await User.findAll();
+
+    res.status(200).json({ users });
+  } catch (error) {
+    logger.error(`Error fetching users: ${error}`);
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+};
+
 module.exports = {
   createUser,
   getUserData,
   updateUser,
+  getAllUsers,
 };

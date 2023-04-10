@@ -41,6 +41,16 @@ class User {
 
     await pool.query(query, [name, email, address, id]);
   }
+
+  async findAll() {
+    const query = `
+      SELECT id, name, email, address, role
+      FROM users
+    `;
+
+    const [rows, fields] = await pool.query(query);
+    return rows; // return all users
+  }
 }
 
 module.exports = new User();
