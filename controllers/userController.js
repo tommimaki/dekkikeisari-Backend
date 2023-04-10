@@ -102,7 +102,6 @@ const updateUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  console.log("Inside getAllUsers function"); // Add this line
   try {
     const users = await User.findAll();
 
@@ -112,10 +111,30 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch users" });
   }
 };
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await User.delete(userId);
+
+    logger.info("User deleted successfully");
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    logger.error(`Error deleting user: ${error}`);
+    res.status(500).json({ message: "Failed to delete user" });
+  }
+};
 
 module.exports = {
   createUser,
   getUserData,
   updateUser,
   getAllUsers,
+  deleteUser,
 };

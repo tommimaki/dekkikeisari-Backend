@@ -51,6 +51,15 @@ class User {
     const [rows, fields] = await pool.query(query);
     return rows; // return all users
   }
+
+  async delete(id) {
+    const query = `
+      DELETE FROM users
+      WHERE id = ?;
+    `;
+
+    await pool.query(query, [id]);
+  }
 }
 
 module.exports = new User();

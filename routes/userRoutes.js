@@ -7,11 +7,13 @@ const {
   getUserData,
   updateUser,
   getAllUsers,
+  deleteUser,
 } = require("../controllers/userController");
 
 router.post("/create", createUser);
 router.get("/user", authenticate, getUserData);
 router.put("/user", authenticate, updateUser);
 router.get("/", getAllUsers);
+router.delete("/:id", deleteUser);
 
 module.exports = router;
