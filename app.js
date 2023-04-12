@@ -19,12 +19,12 @@ app.get("/", (req, res) => {
   res.send("Backend for a portfolio project for a skateboarding online store");
 });
 
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 30, // limit each IP to 30 requests per 15 min// dont overload my aws LOL
-//   message: "Too many requests from this IP, please try again later",
-// });
-// app.use(limiter);
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per 15 min// dont overload my aws LOL
+  message: "Too many requests from this IP, please try again later",
+});
+app.use(limiter);
 
 // Pass the upload instance to the productRoute
 app.use("/products", productRoute);
