@@ -68,6 +68,38 @@ const getUserData = async (req, res) => {
   }
 };
 
+const updateAdminUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { name, email, address, role } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    const userData = await User.findById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedData = {
+      ...(name ? { name } : {}),
+      ...(email ? { email } : {}),
+      ...(address ? { address } : {}),
+      ...(role ? { role } : {}),
+    };
+    await User.update(userId, updatedData);
+
+    const updatedUser = await User.findById(userId); // Fetching the updated user data
+    logger.info("User updated successfully", updatedUser.name);
+    res.status(200).json(updatedUser); // Sending the updated user data in the response
+  } catch (error) {
+    logger.error(`Error updating user: ${error}`);
+    res.status(500).json({ message: "Failed to update user" });
+  }
+};
+
 const updateUser = async (req, res) => {
   try {
     const userId = req.userId;
@@ -137,4 +169,5 @@ module.exports = {
   updateUser,
   getAllUsers,
   deleteUser,
+  updateAdminUser,
 };

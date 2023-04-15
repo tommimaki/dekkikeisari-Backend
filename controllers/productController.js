@@ -42,8 +42,6 @@ const getProductById = async (req, res) => {
     }
 
     logger.info(`Product fetched successfully with id: ${id}`);
-    logger.info(`Product: ${product.sizes}`);
-
     res.status(200).json({ product });
   } catch (error) {
     logger.error(`Error getting product by id: ${error}`);
