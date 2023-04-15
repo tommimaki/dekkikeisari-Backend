@@ -21,19 +21,14 @@ app.get("/", (req, res) => {
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per 15 min// dont overload my aws LOL
+  max: 2000, // limiting each IP to 100 requests per 15 min// dont overload my aws LOL
   message: "Too many requests from this IP, please try again later",
 });
-app.use(limiter);
 
-// Pass the upload instance to the productRoute
+app.use(limiter);
 app.use("/products", productRoute);
 app.use("/orders", orderRoute);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
-
-app.get("/test", (req, res) => {
-  res.send("Test route is working");
-});
 
 module.exports = app;

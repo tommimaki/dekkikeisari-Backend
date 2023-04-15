@@ -71,7 +71,7 @@ const getUserData = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const userId = req.userId;
-    const { name, email, address } = req.body;
+    const { name, email, address, role } = req.body;
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized request" });
@@ -88,13 +88,13 @@ const updateUser = async (req, res) => {
       ...(name ? { name } : {}),
       ...(email ? { email } : {}),
       ...(address ? { address } : {}),
+      ...(role ? { role } : {}),
     };
     await User.update(userId, updatedData);
 
-    const updatedUser = await User.findById(userId); // Fetch the updated user data
-
+    const updatedUser = await User.findById(userId); // Fetching the updated user data
     logger.info("User updated successfully", updatedUser.name);
-    res.status(200).json(updatedUser); // Send the updated user data in the response
+    res.status(200).json(updatedUser); // Sending the updated user data in the response
   } catch (error) {
     logger.error(`Error updating user: ${error}`);
     res.status(500).json({ message: "Failed to update user" });

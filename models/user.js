@@ -32,14 +32,14 @@ class User {
   }
 
   async update(id, updatedData) {
-    const { name, email, address } = updatedData;
+    const { name, email, address, role } = updatedData;
     const query = `
       UPDATE users
-      SET name = ?, email = ?, address = ?
+      SET name = ?, email = ?, address = ?, role = ? 
       WHERE id = ?;
     `;
 
-    await pool.query(query, [name, email, address, id]);
+    await pool.query(query, [name, email, address, role, id]);
   }
 
   async findAll() {

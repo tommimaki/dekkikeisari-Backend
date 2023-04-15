@@ -52,7 +52,6 @@ const getProductById = async (req, res) => {
 };
 
 //delete
-
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,7 +62,7 @@ const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Check if the image URLs are from your S3 bucket
+    // Checking if the image URLs are in S3 bucket, if so deletes them with the product
     const imageUrls = product.image_urls || [];
 
     for (const imageUrl of imageUrls) {
@@ -89,7 +88,6 @@ const deleteProduct = async (req, res) => {
 
     // Remove the product from the database
     await Product.delete(id);
-
     logger.info(`Product deleted successfully with id: ${id}`);
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
@@ -107,8 +105,8 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    //image handeling
     const imageUrls = [];
-
     for (const file of req.files) {
       const fileName = `products/${Date.now()}-${generateFileName()}-${
         file.originalname
@@ -120,6 +118,7 @@ const addProduct = async (req, res) => {
         ContentType: file.mimetype,
       };
 
+      //sends the image to s3 bucket, takes the urls and pushes it to an array that we then pass for the object
       await s3.send(new PutObjectCommand(uploadParams));
       const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
       imageUrls.push(imageUrl);
@@ -164,8 +163,7 @@ const updateProduct = async (req, res) => {
     console.log("Initial imageUrls:", imageUrls);
 
     if (Array.isArray(req.files) && req.files.length > 0) {
-      // Delete old images from S3 bucket
-      // Delete old images from S3 bucket
+      // Deleting old images from S3 bucket
       if (Array.isArray(imageUrls)) {
         console.log("Deleting old images from S3 bucket...");
         for (const oldImageUrl of imageUrls) {
@@ -219,7 +217,7 @@ const updateProduct = async (req, res) => {
       return JSON.stringify(JSON.stringify(arr));
     };
 
-    //for old pictures
+    //Takes old picture urls and forms correctly
     const convertArrayToStringWithEscapedQuotes = (input) => {
       if (Array.isArray(input)) {
         return JSON.stringify(input);
@@ -236,12 +234,6 @@ const updateProduct = async (req, res) => {
         console.error("Invalid input type");
       }
     };
-
-    console.log(
-      "product.image_urls stringify ",
-      typeof product.image_urls,
-      convertArrayToStringWithEscapedQuotes(product.image_urls)
-    );
 
     const updateData = {
       name,

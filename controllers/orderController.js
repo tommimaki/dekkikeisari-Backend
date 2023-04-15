@@ -16,7 +16,7 @@ const createOrder = async (req, res) => {
       shippingAddress,
       name,
       email,
-      status: "pending", // set the default status to 'pending'
+      status: "pending", // setting the default status to 'pending' for orders
     });
 
     logger.info("Order created successfully");
@@ -64,11 +64,11 @@ const updateOrder = async (req, res) => {
     const data = req.body;
 
     await Order.updateById(id, data);
-    const updatedOrder = await Order.findById(id); // Fetch the updated order
+    const updatedOrder = await Order.findById(id); // Fetching the updated order
     logger.info(`Order updated successfully with id: ${id}`);
     res
       .status(200)
-      .json({ message: "Order updated successfully", order: updatedOrder }); // Send the updated order in the response
+      .json({ message: "Order updated successfully", order: updatedOrder }); // Sending the updated order in the response
   } catch (error) {
     logger.error(`Error updating order: ${error}`);
     res.status(500).json({ message: "Failed to update order" });

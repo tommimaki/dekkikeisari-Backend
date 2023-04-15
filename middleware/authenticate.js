@@ -10,9 +10,9 @@ const authenticate = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, "secret-key"); // Replace "secret-key" with the key used to sign the JWT
-    req.userId = decoded.userId; // Attach the userId to the request object
-    next(); // Continue to the next middleware or route handler
+    const decoded = jwt.verify(token, "secret-key");
+    req.userId = decoded.userId;
+    next();
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
   }
