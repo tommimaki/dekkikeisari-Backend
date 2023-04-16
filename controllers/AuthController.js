@@ -14,7 +14,6 @@ const loginUser = async (req, res) => {
     }
 
     const user = await findByEmail(email);
-
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
