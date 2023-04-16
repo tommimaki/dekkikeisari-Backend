@@ -39,7 +39,7 @@ class Product {
     `;
 
     const [rows, fields] = await pool.query(query, [id]);
-    return rows[0]; // return the first result, or null if not found
+    return rows[0];
   }
   async delete(id) {
     const query = `
@@ -48,6 +48,17 @@ class Product {
     `;
 
     await pool.query(query, [id]);
+  }
+
+  async findByProductName(productName) {
+    const query = `
+      SELECT *
+      FROM products
+      WHERE name = ?
+    `;
+
+    const [rows, fields] = await pool.query(query, [productName]);
+    return rows[0];
   }
 
   async update(id, { name, description, price, category, image_urls, sizes }) {

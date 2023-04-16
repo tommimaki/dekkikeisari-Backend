@@ -31,6 +31,24 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+const getProductByName = async (req, res) => {
+  try {
+    const { productName } = req.params;
+    const product = await Product.findByProductName(productName);
+
+    if (!product) {
+      logger.error(`Product not found with name: ${productName}`);
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    logger.info(`Product fetched successfully with name: ${productName}`);
+    res.status(200).json({ product });
+  } catch (error) {
+    logger.error(`Error getting product by name: ${error}`);
+    res.status(500).json({ message: "Failed to get product" });
+  }
+};
+
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -257,6 +275,7 @@ module.exports = {
   addProduct,
   getAllProducts,
   getProductById,
+  getProductByName,
   deleteProduct,
   updateProduct,
 };

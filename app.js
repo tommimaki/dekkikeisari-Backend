@@ -2,15 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const rateLimit = require("express-rate-limit");
-
 //routes
 const productRoute = require("./routes/productRoutes");
 const orderRoute = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const newsletterRoutes = require("./routes/newsletterRoutes");
 
 dotenv.config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -30,5 +29,6 @@ app.use("/products", productRoute);
 app.use("/orders", orderRoute);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/newsletter", newsletterRoutes);
 
 module.exports = app;

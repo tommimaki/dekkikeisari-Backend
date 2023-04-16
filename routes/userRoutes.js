@@ -17,9 +17,9 @@ const {
 router.post("/create", createUser);
 router.get("/user", authenticate, getUserData);
 //for users to change their own data
-router.put("/user", authenticateAdmin, updateUser);
+router.put("/user", authenticate, updateUser);
 //for admin to edit other users
-router.put("/admin/user/:id", authenticate, updateAdminUser);
+router.put("/admin/user/:id", authenticateAdmin, updateAdminUser);
 router.get("/", getAllUsers);
 router.delete("/:id", deleteUser);
 
