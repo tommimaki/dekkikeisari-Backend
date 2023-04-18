@@ -17,5 +17,5 @@ COPY . .
 EXPOSE 3001
 
 # Set the command to run your app
-CMD [ "npm", "start" ]
+CMD [ "npx", "nodemon", "server.js" ]
 
