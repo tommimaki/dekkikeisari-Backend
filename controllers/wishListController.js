@@ -7,6 +7,14 @@ const addToWishlist = async (req, res) => {
 
     const uId = req.body.user_id;
     const pId = req.body.product_id;
+
+    const existingItem = await Wishlist.findItem(uId, pId);
+
+    if (existingItem) {
+      res.status(400).json({ message: "Product already exists in wishlist" });
+      return;
+    }
+
     console.log(pId, "body");
     console.log(uId, "usid");
     await Wishlist.create(uId, pId);
@@ -20,6 +28,7 @@ const addToWishlist = async (req, res) => {
 const removeFromWishlist = async (req, res) => {
   try {
     const { userId, productId } = req.body;
+    logger.info("removing: ", req.body);
     await Wishlist.delete(userId, productId);
     res.status(200).json({ message: "Product removed from wishlist" });
   } catch (error) {

@@ -33,6 +33,16 @@ class Wishlist {
     const [rows, fields] = await pool.query(query, [userId]);
     return rows;
   }
+
+  async findItem(userId, productId) {
+    const query = `
+      SELECT * FROM wishlists
+      WHERE user_id = ? AND product_id = ?
+    `;
+
+    const [rows, fields] = await pool.query(query, [userId, productId]);
+    return rows[0];
+  }
 }
 
 module.exports = new Wishlist();
