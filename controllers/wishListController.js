@@ -37,9 +37,12 @@ const removeFromWishlist = async (req, res) => {
 };
 
 const getUserWishlist = async (req, res) => {
+  logger.info("fetching user wishlist");
   try {
     const { userId } = req.params;
+    console.log(userId);
     const wishlist = await Wishlist.findByUserId(userId);
+    logger.info(`wishelist fetched correctly for customer with ID: ${userId}`);
     res.status(200).json({ wishlist });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch user wishlist" });
