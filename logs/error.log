@@ -1,0 +1,14 @@
+2023-04-18 14:25:27 error: Error getting products: Error: Connection lost: The server closed the connection.
+2023-04-18 15:43:02 error: Column 'user_id' cannot be null
+2023-04-18 15:48:05 error: Column 'user_id' cannot be null
+2023-04-18 15:48:54 error: Column 'user_id' cannot be null
+2023-04-18 15:50:29 error: Column 'user_id' cannot be null
+2023-04-18 15:53:44 error: Column 'user_id' cannot be null
+2023-04-18 15:54:01 error: Column 'user_id' cannot be null
+2023-04-18 15:56:21 error: Column 'user_id' cannot be null
+2023-04-18 15:57:50 error: Column 'user_id' cannot be null
+2023-04-18 16:00:19 error: Column 'user_id' cannot be null
+2023-04-18 16:01:16 error: Column 'user_id' cannot be null
+2023-04-18 16:01:30 error: Column 'user_id' cannot be null
+2023-04-18 16:01:55 error: Column 'user_id' cannot be null
+2023-04-18 16:03:50 error: Column 'user_id' cannot be null

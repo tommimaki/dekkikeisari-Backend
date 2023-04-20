@@ -1,4 +1,3 @@
-
 # Setting the base image to Node.js
 FROM node:19
 # Setting the working directory in the container
