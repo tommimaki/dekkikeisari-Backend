@@ -15,7 +15,7 @@ class Order {
       VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
 
-    await pool.query(query, [
+    const [result] = await pool.query(query, [
       customerId,
       JSON.stringify(products),
       total,
@@ -24,6 +24,9 @@ class Order {
       customerEmail,
       status,
     ]);
+    const orderId = result.insertId;
+    console.log(orderId);
+    return orderId;
   }
 
   async find() {

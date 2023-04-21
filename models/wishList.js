@@ -6,10 +6,6 @@ class Wishlist {
           INSERT INTO wishlists (user_id, product_id)
           VALUES (?, ?);
         `;
-
-    console.log("Executing query:", query);
-    console.log("With parameters:", userId, productId);
-
     await pool.query(query, [userId, productId]);
   }
 

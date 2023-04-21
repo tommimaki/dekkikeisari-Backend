@@ -23,7 +23,7 @@ console.log("startup biiish");
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 2000, // limiting each IP to 100 requests per 15 min// dont overload my aws LOL
+  max: 2000, // limiting each IP to 2000 requests per 15 min// dont overload my aws LOL
   message: "Too many requests from this IP, please try again later",
 });
 

@@ -9,7 +9,8 @@ const createOrder = async (req, res) => {
     if (!customerId || !products || !total || !shippingAddress) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    await Order.create({
+
+    const orderId = await Order.create({
       customerId,
       products,
       total,
@@ -20,7 +21,7 @@ const createOrder = async (req, res) => {
     });
 
     logger.info("Order created successfully");
-    res.status(201).json({ message: "Order created successfully" });
+    res.status(201).json({ message: "Order created successfully", orderId });
   } catch (error) {
     console.error("Error creating order:", error);
     res

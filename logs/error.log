@@ -12,3 +12,8 @@
 2023-04-18 16:01:30 error: Column 'user_id' cannot be null
 2023-04-18 16:01:55 error: Column 'user_id' cannot be null
 2023-04-18 16:03:50 error: Column 'user_id' cannot be null
+2023-04-20 16:28:47 error: PId is not defined
+2023-04-20 16:29:20 error: PId is not defined
+2023-04-20 17:06:40 error: Error getting orders by customer ID: Error: connect ETIMEDOUT
+2023-04-20 17:06:45 error: Error getting orders by customer ID: Error: connect ETIMEDOUT
+2023-04-20 17:06:56 error: Error getting orders by customer ID: Error: Got timeout reading communication packets

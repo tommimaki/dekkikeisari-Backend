@@ -1,4 +1,5 @@
-const Wishlist = require("../models/wishlist");
+const { PI } = require("aws-sdk");
+const Wishlist = require("../models/wishList");
 const logger = require("../utils/logger");
 
 const addToWishlist = async (req, res) => {
@@ -15,10 +16,8 @@ const addToWishlist = async (req, res) => {
       return;
     }
 
-    console.log(pId, "body");
-    console.log(uId, "usid");
     await Wishlist.create(uId, pId);
-    res.status(201).json({ message: "Product added to wishlist" });
+    res.status(201).json({ message: "Product added to wishlist" + pId });
   } catch (error) {
     res.status(500).json({ message: "Failed to add product to wishlist" });
     logger.error(error);
@@ -42,7 +41,7 @@ const getUserWishlist = async (req, res) => {
     const { userId } = req.params;
     console.log(userId);
     const wishlist = await Wishlist.findByUserId(userId);
-    logger.info(`wishelist fetched correctly for customer with ID: ${userId}`);
+    logger.info(`wishlist fetched correctly for customer with ID: ${userId}`);
     res.status(200).json({ wishlist });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch user wishlist" });
