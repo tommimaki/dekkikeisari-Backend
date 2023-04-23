@@ -117,8 +117,8 @@ const addProduct = async (req, res) => {
   try {
     const { name, description, price, category, sizes } = req.body;
 
-    if (!name || !description || !price || !category || !sizes || !req.files) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!name || !description || !price || !category || !sizes) {
+      return res.status(400).json({ message: "Reuired fields are missing" });
     }
 
     //image handeling

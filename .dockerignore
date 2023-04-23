@@ -1,6 +1,7 @@
 # flyctl launch added from .gitignore
 **/node_modules
 **/.env
+.env.test
 fly.toml
 node_modules
 npm-debug.log
