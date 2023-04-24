@@ -7,7 +7,15 @@ class User {
           VALUES (?, ?, ?, ?, ?);
         `;
 
-    await pool.query(query, [name, email, password, address, role]);
+    // await pool.query(query, [name, email, password, address, role]);
+    const [result] = await pool.query(query, [
+      name,
+      email,
+      password,
+      address,
+      role,
+    ]);
+    return result.insertId;
   }
   async findByEmail(email) {
     const query = `
@@ -47,7 +55,6 @@ class User {
       SELECT id, name, email, address, role
       FROM users
     `;
-
     const [rows, fields] = await pool.query(query);
     return rows; // return all users
   }
@@ -57,8 +64,15 @@ class User {
       DELETE FROM users
       WHERE id = ?;
     `;
-
     await pool.query(query, [id]);
+  }
+
+  // Add this method to your User model in models/user.js
+  async deleteAll() {
+    const query = `
+    DELETE FROM users;
+  `;
+    await pool.query(query);
   }
 }
 

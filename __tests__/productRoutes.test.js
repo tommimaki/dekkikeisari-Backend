@@ -21,7 +21,7 @@ beforeAll(async () => {
 });
 
 describe("Product routes", () => {
-  afterEach(async () => {
+  afterAll(async () => {
     await pool.query(
       `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
     );

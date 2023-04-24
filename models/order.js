@@ -6,8 +6,8 @@ class Order {
     products,
     total,
     shippingAddress,
-    customerName,
-    customerEmail,
+    name,
+    email,
     status,
   }) {
     const query = `
@@ -20,12 +20,11 @@ class Order {
       JSON.stringify(products),
       total,
       JSON.stringify(shippingAddress),
-      customerName,
-      customerEmail,
+      name,
+      email,
       status,
     ]);
     const orderId = result.insertId;
-    console.log(orderId);
     return orderId;
   }
 
@@ -34,7 +33,6 @@ class Order {
       SELECT *
       FROM orders
     `;
-
     const [rows, fields] = await pool.query(query);
     return rows;
   }

@@ -22,11 +22,8 @@ beforeAll(async () => {
 });
 
 describe("Order routes", () => {
-  beforeEach(async () => {
-    await pool.query("DELETE FROM orders");
-  });
-
-  afterEach(async () => {
+  //empty the test db after testing
+  afterAll(async () => {
     await pool.query("DELETE FROM orders");
   });
 
@@ -67,12 +64,103 @@ describe("Order routes", () => {
     expect(typeof response.body.orderId).toBe("number");
   });
 
-  // Other test cases for Orders:
-  // - Fetch all orders
-  // - Fetch order by ID
-  // - Update order
-  // - Delete order
-  // - Fetch orders by customer ID
+  it("should fetch all orders", async () => {
+    const response = await request(app).get("/orders");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("orders");
+    expect(response.body.orders).toBeInstanceOf(Array);
+  });
+
+  it("should fetch an order by ID", async () => {
+    const createdOrderId = await order.create({
+      customerId: 1,
+      products: JSON.stringify([
+        { productId: 73, price: "39.99", quantity: 1 },
+      ]),
+      total: 39.99,
+      shippingAddress: JSON.stringify("Tomminkatu 16"),
+      name: "John Doe",
+      email: "john.doe@example.com",
+      status: "pending",
+    });
+
+    const response = await request(app).get(`/orders/${createdOrderId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("order");
+    expect(response.body.order.id).toBe(createdOrderId);
+  });
+
+  it("should update an order", async () => {
+    const createdOrderId = await order.create({
+      customerId: 1,
+      products: JSON.stringify([
+        { productId: 73, price: "39.99", quantity: 1 },
+      ]),
+      total: 39.99,
+      shippingAddress: JSON.stringify("Tomminkatu 16"),
+      name: "John Doe",
+      email: "john.doe@example.com",
+      status: "pending",
+    });
+
+    const updatedData = {
+      status: "shipped",
+    };
+
+    const response = await request(app)
+      .put(`/orders/${createdOrderId}`)
+      .send(updatedData);
+    console.log("Update order error:", response.body.message);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Order updated successfully"
+    );
+    expect(response.body).toHaveProperty("order");
+    expect(response.body.order.status).toBe(updatedData.status);
+  });
+
+  it("should delete an order", async () => {
+    const createdOrderId = await order.create({
+      customerId: 1,
+      products: JSON.stringify([
+        { productId: 73, price: "39.99", quantity: 1 },
+      ]),
+      total: 39.99,
+      shippingAddress: JSON.stringify("Tomminkatu 16"),
+      name: "John Doe",
+      email: "john.doe@example.com",
+      status: "pending",
+    });
+
+    const response = await request(app).delete(`/orders/${createdOrderId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Order deleted successfully"
+    );
+  });
+
+  it("should fetch orders by customer ID", async () => {
+    const customerId = 1;
+    const createdOrderId = await order.create({
+      customerId,
+      products: JSON.stringify([
+        { productId: 73, price: "39.99", quantity: 1 },
+      ]),
+      total: 39.99,
+      shippingAddress: JSON.stringify("Tomminkatu 16"),
+      name: "John Doe",
+      email: "john.doe@example.com",
+      status: "pending",
+    });
+
+    const response = await request(app).get(`/orders/customer/${customerId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("orders");
+    expect(response.body.orders).toBeInstanceOf(Array);
+    expect(response.body.orders[0].customer_id).toBe(customerId);
+  });
 });
 
 afterAll(async () => {
