@@ -3,10 +3,10 @@ if (process.env.NODE_ENV === "test") {
 } else {
   require("dotenv").config();
 }
+//setting the testdb via .env.test
 const request = require("supertest");
 const app = require("../app");
 const Product = require("../models/product");
-
 const { pool } = require("../DB/db");
 
 beforeAll(async () => {
@@ -26,9 +26,6 @@ describe("Product routes", () => {
       `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
     );
   });
-
-  let productId;
-
   it("should add a new product", async () => {
     const response = await request(app)
       .post("/products/add")
@@ -77,13 +74,10 @@ describe("Product routes", () => {
           "https://example.com/image2.jpg",
         ],
       };
-
       // Inserting the product into the database
       await Product.create(product);
-
       // Finding the inserted product by name
       const existingProduct = await Product.findByProductName(product.name);
-
       // Sending a request to get the product by ID
       const res = await request(app).get(`/products/${existingProduct.id}`);
       expect(res.statusCode).toEqual(200);
@@ -92,13 +86,10 @@ describe("Product routes", () => {
         ...res.body.product,
         price: parseFloat(res.body.product.price),
       };
-
       expect(receivedProduct).toMatchObject(product);
-
       // Deleting the product from the database
       await Product.delete(existingProduct.id);
     });
-
     it("should return 404 if product not found", async () => {
       const nonExistentProductId = 999999;
       const res = await request(app).get(`/products/${nonExistentProductId}`);
@@ -107,7 +98,6 @@ describe("Product routes", () => {
     });
   });
 });
-
 afterAll(async () => {
   await pool.end();
 });

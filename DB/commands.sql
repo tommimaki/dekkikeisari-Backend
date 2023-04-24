@@ -20,14 +20,19 @@ CREATE TABLE users (
         role VARCHAR(255) NOT NULL DEFAULT 'user'
       );
 
-       CREATE TABLE orders (
-      id INT PRIMARY KEY AUTO_INCREMENT,
-      user_id INT,
-      order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-      total DECIMAL(10, 2),
-      status ENUM('Pending', 'Shipped', 'Delivered', 'Canceled'),
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
+ CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  customer_id INT,
+  products TEXT NOT NULL,
+  total DECIMAL(10, 2) NOT NULL,
+  shipping_address TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  customer_name VARCHAR(255),
+  customer_email VARCHAR(255),
+  status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending'
+);
+
 
         CREATE TABLE products (
       id INT PRIMARY KEY AUTO_INCREMENT,

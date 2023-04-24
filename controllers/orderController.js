@@ -23,6 +23,7 @@ const createOrder = async (req, res) => {
     logger.info("Order created successfully");
     res.status(201).json({ message: "Order created successfully", orderId });
   } catch (error) {
+    logger.error(error);
     console.error("Error creating order:", error);
     res
       .status(500)
