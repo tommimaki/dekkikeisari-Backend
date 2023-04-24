@@ -101,21 +101,21 @@ const initDB = async () => {
     await createUsersTable();
     console.log("Users table created.");
 
-    // console.log("Creating orders table...");
-    // await createOrdersTable();
-    // console.log("Orders table created.");
+    console.log("Creating orders table...");
+    await createOrdersTable();
+    console.log("Orders table created.");
 
-    // console.log("Creating products table...");
-    // await createProductsTable();
-    // console.log("Products table created.");
+    console.log("Creating products table...");
+    await createProductsTable();
+    console.log("Products table created.");
 
-    // console.log("Creating order items table...");
-    // await createOrderItemsTable();
-    // console.log("Order items table created.");
+    console.log("Creating order items table...");
+    await createOrderItemsTable();
+    console.log("Order items table created.");
 
-    // console.log("Creating shopping cart table...");
-    // await createShoppingCartTable();
-    // console.log("Shopping cart table created.");
+    console.log("Creating shopping cart table...");
+    await createShoppingCartTable();
+    console.log("Shopping cart table created.");
   } catch (error) {
     console.error("Error creating tables:", error);
     process.exit(1);
