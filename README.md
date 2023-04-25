@@ -2,7 +2,7 @@
 
 ### This is the documentation for the backend of the SkateShop project built using Node.js and Express.
 
-![architecture img](uploads/arch.png)
+![architecture img](uploads/archfr.png)
 
 ## Table of Contents
 
@@ -29,13 +29,12 @@ To install the required dependencies, run the following command in the project d
 
 The project includes the following npm scripts:
 
-    npm run test
-
 - `test`: Runs tests using Jest.
-  npm run start
+  `npm run test`
 - `start`: Starts the server using the `server.js` file.
-  npm run dev
+  `npm run start`
 - `dev`: Starts the server using Nodemon for automatic restarts on file changes.
+  `npm run dev`
 
 ## Dependencies
 
@@ -59,7 +58,7 @@ The project uses the following production dependencies:
 
 ### Development Dependencies
 
-The project uses the following development dependencies:
+The project uses the following development dependencies for testing purposes:
 
 - `jest`: JavaScript testing framework.
 - `supertest`: HTTP testing library
@@ -74,4 +73,4 @@ The backend handles various functionality for the SkateShop application, includi
 - **Order Management**: Creating, updating, and retrieving order information.
 - **Admin Panel**: Allows administrators to manage products, orders, and customer information.
 
-These functionalities are achieved through a series of API routes that interact with the application's MySql database, AWS S3 for file storage, and handle authentication using JSON Web Tokens.
+These functionalities are achieved through a series of API routes that interact with the application's MySql database on AWS RDS instance and AWS S3 for file storage.
