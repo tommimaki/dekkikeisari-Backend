@@ -23,8 +23,6 @@ To install the required dependencies, run the following command in the project d
 
 - npm install
 
-```
-
 ## Scripts
 
 The project includes the following npm scripts:
@@ -62,8 +60,7 @@ The project uses the following production dependencies:
 The project uses the following development dependencies:
 
 - `jest`: JavaScript testing framework.
-- `supertest`: HTTP testing library.
-```
+- `supertest`: HTTP testing library
 
 ## Backend Routes and Functionality
 
