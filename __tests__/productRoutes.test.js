@@ -21,11 +21,6 @@ beforeAll(async () => {
 });
 
 describe("Product routes", () => {
-  afterAll(async () => {
-    await pool.query(
-      `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
-    );
-  });
   it("should add a new product", async () => {
     const response = await request(app)
       .post("/products/add")
@@ -56,11 +51,11 @@ describe("Product routes", () => {
   });
 
   describe("GET /products/:id", () => {
-    afterEach(async () => {
-      await pool.query(
-        `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
-      );
-    });
+    // afterEach(async () => {
+    //   await pool.query(
+    //     `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
+    //   );
+    // });
 
     it("should return a product by ID", async () => {
       const product = {
@@ -98,6 +93,10 @@ describe("Product routes", () => {
     });
   });
 });
+
 afterAll(async () => {
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("DELETE FROM products");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
   await pool.end();
 });

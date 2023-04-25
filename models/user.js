@@ -67,7 +67,6 @@ class User {
     await pool.query(query, [id]);
   }
 
-  // Add this method to your User model in models/user.js
   async deleteAll() {
     const query = `
     DELETE FROM users;

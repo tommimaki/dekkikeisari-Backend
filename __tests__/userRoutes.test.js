@@ -10,31 +10,42 @@ const { pool } = require("../DB/db");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const testUser = {
-  name: "Test User",
-  email: "test.user@example.com",
-  password: "test_password",
-  address: "Test Address",
-  role: "customer",
-};
-
-let testUserId;
-
 beforeAll(async () => {
   try {
     const conn = await pool.getConnection();
     console.log("Connected to the database!");
+    await pool.query("SET FOREIGN_KEY_CHECKS = 0;");
     conn.release();
   } catch (err) {
     console.error("Error connecting to the database:", err);
   }
-  // Clearing the users table before running tests
-  await User.deleteAll();
+});
 
-  // Creating a test user
+let testUserId;
+beforeEach(async () => {
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0;");
+  await pool.query("DELETE FROM users");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1;");
+
+  testUser = {
+    name: "Test User",
+    email: "test.user@example.com",
+    password: "test_password",
+    address: "Test Address",
+    role: "customer",
+  };
+
   testUserId = await User.create(testUser);
-  //generating token for the test user:
   userToken = jwt.sign({ userId: testUserId }, "secret-key");
+});
+
+afterAll(async () => {
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0;");
+  await pool.query("DELETE FROM users");
+  await pool.query("DELETE FROM orders");
+  await pool.query("DELETE FROM products");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1;");
+  await pool.end();
 });
 
 describe("User routes", () => {
@@ -88,9 +99,4 @@ describe("User routes", () => {
     expect(response.body).toHaveProperty("address", updatedData.address);
     expect(response.body).toHaveProperty("role", updatedData.role);
   });
-});
-
-afterAll(async () => {
-  await User.deleteAll();
-  await pool.end();
 });

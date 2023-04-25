@@ -15,18 +15,43 @@ beforeAll(async () => {
   try {
     const conn = await pool.getConnection();
     console.log("Connected to the database!");
+    await pool.query("SET FOREIGN_KEY_CHECKS = 0");
     conn.release();
   } catch (err) {
     console.error("Error connecting to the database:", err);
   }
 });
+afterAll(async () => {
+  await pool.query("SET FOREIGN_KEY_CHECKS = 0");
+  await pool.query("DELETE FROM orders");
+  await pool.query("DELETE FROM products");
+  await pool.query("DELETE FROM users");
+  await pool.query("SET FOREIGN_KEY_CHECKS = 1");
+  await pool.end();
+});
 
 describe("Order routes", () => {
-  //empty the test db after testing
-  afterAll(async () => {
-    await pool.query("DELETE FROM orders");
+  let createdOrderId;
+
+  beforeEach(async () => {
+    createdOrderId = await order.create({
+      customerId: 1,
+      products: JSON.stringify([
+        { productId: 73, price: "39.99", quantity: 1 },
+      ]),
+      total: 39.99,
+      shippingAddress: JSON.stringify("Tomminkatu 16"),
+      name: "John Doe",
+      email: "john.doe@example.com",
+      status: "pending",
+    });
   });
 
+  afterEach(async () => {
+    await order.deleteById(createdOrderId);
+  });
+
+  //empty the test db after testing
   it("should create a new order", async () => {
     const { customerId, products, total, shippingAddress, name, email } = {
       customerId: 1,
@@ -161,8 +186,4 @@ describe("Order routes", () => {
     expect(response.body.orders).toBeInstanceOf(Array);
     expect(response.body.orders[0].customer_id).toBe(customerId);
   });
-});
-
-afterAll(async () => {
-  await pool.end();
 });
