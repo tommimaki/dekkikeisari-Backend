@@ -2,6 +2,8 @@
 
 ### This is the documentation for the backend of the SkateShop project built using Node.js and Express.
 
+![architecture img](uploads/arch.png)
+
 ## Table of Contents
 
 - [Requirements](#requirements)
