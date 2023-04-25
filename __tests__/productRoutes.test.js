@@ -51,12 +51,6 @@ describe("Product routes", () => {
   });
 
   describe("GET /products/:id", () => {
-    // afterEach(async () => {
-    //   await pool.query(
-    //     `DELETE FROM products WHERE name = 'Product Name' OR name = 'Product test Name'`
-    //   );
-    // });
-
     it("should return a product by ID", async () => {
       const product = {
         name: "Product test Name",

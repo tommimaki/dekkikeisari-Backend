@@ -31,7 +31,6 @@ const authenticateAdmin = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, "secret-key");
-    console.log("Decoded Token:", decoded); // Log the decoded token value
     const user = await User.findById(decoded.userId);
     console.log("User:", user); // Log the user object
     if (!user || user.role !== "admin") {

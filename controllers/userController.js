@@ -72,15 +72,12 @@ const updateAdminUser = async (req, res) => {
   console.log("admin update");
   try {
     const userId = req.params.id;
-    console.log("User ID:", userId); // Log the user ID
     const { name, email, address, role } = req.body;
-    console.log("Request body:", req.body); // Log the request body
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized request" });
     }
 
     const userData = await User.findById(userId);
-    console.log("User Data:", userData); // Log the user data
 
     if (!userData) {
       return res.status(404).json({ message: "User not found" });
@@ -118,7 +115,7 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Only update fields that are provided in the request body
+    // updating fields that are provided in the request body
     const updatedData = {
       ...(name ? { name } : {}),
       ...(email ? { email } : {}),

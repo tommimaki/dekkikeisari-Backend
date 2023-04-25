@@ -7,16 +7,6 @@ class Product {
       VALUES (?, ?, ?, ?, ?, ?);
     `;
 
-    // await pool.query(query, [
-    //   name,
-    //   description,
-    //   price,
-    //   category,
-    //   JSON.stringify(image_urls),
-    //   sizes,
-    // ]);
-
-    // modified to return the added product id
     const [result] = await pool.query(query, [
       name,
       description,
@@ -26,7 +16,6 @@ class Product {
       sizes,
     ]);
 
-    // Return the insertId from the result
     return { id: result.insertId };
   }
 
